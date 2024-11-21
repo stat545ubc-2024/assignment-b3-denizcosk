@@ -1,0 +1,10 @@
+name: test
+title:
+username: dezc
+account: dezc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13408195
+bundleId: 9399348
+url: https://dezc.shinyapps.io/test/
+version: 1
