@@ -21,16 +21,17 @@ ui <- fluidPage(
           choices = unique(penguins$species),
           selected = "Adelie"
         ),
-    #Feature 2: I am adding another drop down menu here so user can toggle
-    #between islands or look at all islands together. This is useful because
-    #the user might be interested in overall body mass or only body mass in a
-    #particular island. This feature gives them this option.
-        selectInput(
-          inputId = "island",
-          label = "Choose an Island:",
-          choices = c("All", as.character(unique(penguins$island))),
-          selected = "All"
-        ),
+    #Feature 2: I am adding check box menu here so user can choose
+    #between islands or look at all or a group of islands together.
+    #This is useful because the user might be interested in overall body mass
+    #of all islands or only body mass in a particular island.
+    #This feature gives them this option.
+    checkboxGroupInput(
+      inputId = "island",
+      label = "Choose Island(s):",
+      choices = as.character(unique(penguins$island)),
+      selected = as.character(unique(penguins$island))
+    ),
     #Feature 3: I am adding a slider so users can choose the bin size of their
     #histogram. This is useful because users might be interested in broad trends
     #of body mass or they may be interested in more exact (smaller) bins.
@@ -51,13 +52,14 @@ ui <- fluidPage(
 
 
 server <- function(input, output) {
+  #this filters the data so that only the species selected with the drop down
+  #menu and the islands selected in the check boxes are included in the
+  #rendered plot.
   output$bodyMassPlot <- renderPlot({
-    # Filter data based on selected species and island
     filtered_data <- penguins[penguins$species == input$species, ]
-    if (input$island != "All") {
-      filtered_data <- filtered_data[filtered_data$island == input$island, ]
+    if (!is.null(input$island) && length(input$island) > 0) {
+      filtered_data <- filtered_data[filtered_data$island %in% input$island, ]
     }
-
     #Plot
     ggplot(filtered_data, aes(x = body_mass_g)) +
       geom_histogram(
@@ -68,15 +70,14 @@ server <- function(input, output) {
       ) +
       labs(
         title = paste(
-          "Body Mass Histogram for",
+          "Body Mass Range of",
           input$species,
-          "Penguins",
-          ifelse(input$island == "All", "", paste("on", input$island))
+          "Penguins"
         ),
         x = "Body Mass (g)",
         y = "Frequency"
       ) +
-      theme_minimal()
+      theme_linedraw()
   })
 }
 
