@@ -9,7 +9,7 @@ ui <- fluidPage(
   # Adding in a theme
   theme = bs_theme(
     version = 4,
-    bootswatch = "cosmo",
+    bootswatch = "cerulean",
     primary = "#FF6347",
     secondary = "#20B2AA"
   ),
@@ -17,7 +17,7 @@ ui <- fluidPage(
   # App title
   titlePanel("Palmer Penguins Body Mass Analysis"),
 
-  # Feature: Tabset panel with three tabs so users will be welcomed with a greeting page
+  # Feature 1: Tabset panel with three tabs so users will be welcomed with a greeting page
   # and then be able to toggle between the visual representation of the body mass data
   #and the raw data table
   tabsetPanel(
@@ -25,18 +25,21 @@ ui <- fluidPage(
     tabPanel(
       title = "Welcome!",
       h2("Welcome to the Palmer Penguins Body Mass Analysis App :)"),
-      p("This app allows you to explore the body mass distribution of penguins based on species and island using the Penguins data
-         from the PalmerPenguins R  package."),
-      p("Use the tabs above to navigate through the app. You can visualize histograms of body mass or explore the raw data.")
+      p("This app allows you to explore the body mass of penguins included in the PalmerPenguins R package.
+        Use the tabs above to navigate through the app"),
+      p("On the Histogram tab, you can visualize body mass distribution of the penguins and impliment
+      different filters to the data being visualized"),
+      p("On the Data Table tab, you can view and download the raw penguin body mass data.
+        The data can be filtered by species and/or island")
     ),
 
     # Tab 2: Histogram
-    #Feature: I am adding in a drop down menu for species so when users are
+    #Feature 2.1 : I am adding in a drop down menu for species so when users are
     #looking at the histogram of body mass they can look at the distribution of
     #body mass separately for each species. Body mass will vary widely between
     #species so it is helpful to be able to look at each species separately.
     tabPanel(
-      title = "Histogram of Body Mass",
+      title = "Histogram",
       sidebarLayout(
         sidebarPanel(
           selectInput(
@@ -45,7 +48,7 @@ ui <- fluidPage(
             choices = unique(penguins$species),
             selected = "Adelie"
           ),
-          #Feature: I am adding check box menu here so user can choose
+          #Feature 2.2 : I am adding check box menu here so user can choose
           #between islands or look at all or a group of islands together.
           #This is useful because the user might be interested in overall body mass
           #of all islands or only body mass in a particular island.
@@ -56,7 +59,7 @@ ui <- fluidPage(
             choices = as.character(unique(penguins$island)),
             selected = as.character(unique(penguins$island))
           ),
-          #Feature: I am adding a slider so users can choose the bin size of their
+          #Feature 3: I am adding a slider so users can choose the bin size of their
           #histogram. This is useful because users might be interested in broad trends
           #of body mass or they may be interested in more exact (smaller) bins.
           sliderInput(
@@ -75,8 +78,17 @@ ui <- fluidPage(
 
     # Tab 3: Data Table
     tabPanel(
-      title = "Raw Data Table",
-      DTOutput(outputId = "dataTable")
+      title = "Data Table",
+      h3("Explore the Penguin Data"),
+      p("You can filter the data by typing in the boxes below each column header. At the
+        bottom of this page you can download the table of data you have filtered using the
+        blue button"),
+      DTOutput(outputId = "dataTable"),
+      #Feature 4: This allows users to download the data that they filter for their own use.
+      #This is helpful as once they have visualized the data in the Histogram tab,
+      #they can download the corresponding filtered data so they can do their own further
+      #analysis on it.
+      downloadButton("downloadData", "Download Filtered Data")
     )
   )
 )
@@ -113,10 +125,10 @@ server <- function(input, output) {
   output$dataTable <- renderDT({
     datatable(
       penguins[, c("species", "island", "body_mass_g")],
-      #Feature: Letting users decide which species and islands they want to view
+      #Feature 5: Letting users decide which species and islands they want to view
       #in the data table
       filter = "top",
-      #Feature: Creating a drop down menu so users can choose the number of entries they
+      #Feature 5.1: Creating a drop down menu so users can choose the number of entries they
       #wish to see on the page
       options = list(
         pageLength = 10,
