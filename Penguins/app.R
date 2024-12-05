@@ -146,7 +146,9 @@ server <- function(input, output) {
       paste("filtered_penguin_data.csv")
     },
     content = function(file) {
-      # Feature: Filter the data to be downloaded based on the user input
+      # Feature 7: Filter the data to be downloaded based on the user input.
+      # This way the user, after deciding which data they want using the histogram,
+      # can just download that specific data.
       filtered_data <- penguins[penguins$species == input$species, ]
       if (!is.null(input$island) && length(input$island) > 0) {
         filtered_data <- filtered_data[filtered_data$island %in% input$island, ]
