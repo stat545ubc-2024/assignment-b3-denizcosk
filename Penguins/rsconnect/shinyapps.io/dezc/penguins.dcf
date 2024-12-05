@@ -1,0 +1,10 @@
+name: penguins
+title:
+username: dezc
+account: dezc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13535119
+bundleId: 9470329
+url: https://dezc.shinyapps.io/penguins/
+version: 1

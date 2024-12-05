@@ -81,8 +81,8 @@ ui <- fluidPage(
       title = "Data Table",
       h3("Explore the Penguin Data"),
       p("You can filter the data by typing in the boxes below each column header. At the
-        bottom of this page you can download the table of data you have filtered using the
-        blue button"),
+        bottom of this page you can download a csv file of the data you have filtered using the
+        blue button at the bottom of the screen."),
       DTOutput(outputId = "dataTable"),
       #Feature 4: This allows users to download the data that they filter for their own use.
       #This is helpful as once they have visualized the data in the Histogram tab,
@@ -139,6 +139,23 @@ server <- function(input, output) {
       rownames = FALSE
     )
   })
+
+  # Download handler for the filtered data table raw data
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("filtered_penguin_data.csv")
+    },
+    content = function(file) {
+      # Feature: Filter the data to be downloaded based on the user input
+      filtered_data <- penguins[penguins$species == input$species, ]
+      if (!is.null(input$island) && length(input$island) > 0) {
+        filtered_data <- filtered_data[filtered_data$island %in% input$island, ]
+      }
+
+      write.csv(filtered_data[, c("species", "island", "body_mass_g")], file, row.names = FALSE)
+    }
+  )
+
 }
 
 shinyApp(ui = ui, server = server)
