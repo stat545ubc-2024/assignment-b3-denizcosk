@@ -9,8 +9,8 @@ ui <- fluidPage(
   # Adding in a theme
   theme = bs_theme(
     version = 4,
-    bootswatch = "cerulean",
-    primary = "#FF6347",
+    bootswatch = "minty",
+    primary = "cornflowerblue",
     secondary = "#20B2AA"
   ),
 
@@ -26,11 +26,11 @@ ui <- fluidPage(
       title = "Welcome!",
       h2("Welcome to the Palmer Penguins Body Mass Analysis App :)"),
       p("This app allows you to explore the body mass of penguins included in the PalmerPenguins R package.
-        Use the tabs above to navigate through the app"),
+        Use the tabs above to navigate through the app."),
       p("On the Histogram tab, you can visualize body mass distribution of the penguins and impliment
-      different filters to the data being visualized"),
+      different filters to the data being visualized."),
       p("On the Data Table tab, you can view and download the raw penguin body mass data.
-        The data can be filtered by species and/or island")
+        The data can be filtered by species and/or island.")
     ),
 
     # Tab 2: Histogram
@@ -121,14 +121,16 @@ server <- function(input, output) {
       theme_linedraw()
   })
 
-  # Render the data table with built-in filtering
+
+
+  # Create the data table
   output$dataTable <- renderDT({
     datatable(
       penguins[, c("species", "island", "body_mass_g")],
       #Feature 5: Letting users decide which species and islands they want to view
       #in the data table
       filter = "top",
-      #Feature 5.1: Creating a drop down menu so users can choose the number of entries they
+      #Feature 6: Creating a drop down menu so users can choose the number of entries they
       #wish to see on the page
       options = list(
         pageLength = 10,
